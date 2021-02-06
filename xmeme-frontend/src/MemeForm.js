@@ -2,46 +2,61 @@ import React, { useState } from 'react';
 import env from "react-dotenv";
 import Loader from "react-loader-spinner";
 import ErrorMessage from './ErrorMessage';
+import {memeSchema} from './Validations/memeValidation';
 
 export default function MemeForm({showModal, toggleModal, refreshMemes}) {
-
     //state
     const [Name, setName] = useState("");
     const [Caption, setCaption] = useState("");
     const [ImageURL, setImageURL] = useState("");
     const [loading, setLoading] = useState(false);
     const [showErrorMessage, setShowErrorMessage]= useState(false);
+    const [errorMessage, setErrorMessage]= useState("");
+
     const backendURL= env.BACKEND_URL;
 
-
-    const postMeme= (e) => {
+    const postMeme= async(e) => {
         e.preventDefault();
         setLoading(true);
         setShowErrorMessage(false);
+
         const data = {
             name: Name,
             caption: Caption,
             url: ImageURL
         };
-        fetch(backendURL, {
-            method: "POST",
-            headers: {
-                'Content-Type': 'application/json',
-              },
-            body: JSON.stringify(data)
-        })
-        .then(res => {
-            if(res.ok){
+
+        const isValid = await memeSchema.isValid(data);
+
+        if(isValid){
+            fetch(backendURL, {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                  },
+                body: JSON.stringify(data)
+            })
+            .then(res => {
+                if(res.status===201){
+                    toggleModal(false);
+                    refreshMemes();
+                }
+                else if(res.status===500){
+                    setErrorMessage("Internal Server Error! Please retry!");
+                    setShowErrorMessage(true);
+                }
+                else if(res.status===409){
+                    setErrorMessage("Please don't send duplicate posts!");
+                    setShowErrorMessage(true);
+                }
                 setLoading(false);
-                toggleModal(false);
-            }
-            else if(res.status===500){
-                setLoading(false);
-                setShowErrorMessage(true);
-                refreshMemes();
-            }
-        })
-        .catch(err => console.log(err));
+            })
+            .catch(err => console.log(err));
+        } else {
+            setErrorMessage("Please fill all the fields!");
+            setShowErrorMessage(true);
+            setLoading(false);
+        }
     }
 
     return (
@@ -55,7 +70,7 @@ export default function MemeForm({showModal, toggleModal, refreshMemes}) {
                     
                     <form className="pt-4">
                         {
-                            showErrorMessage ? <ErrorMessage toggleErrorMessage={() => setShowErrorMessage(false)}/> : null
+                            showErrorMessage ? <ErrorMessage toggleErrorMessage={() => setShowErrorMessage(false)} message={errorMessage}/> : null
                         }
                         <div>
                             <div className="mb-4">

@@ -18,7 +18,9 @@
     "react-smooth-image": "^1.1.0",
     "react-spring": "^9.0.0-rc.3",
     "react-truncate": "^2.4.0",
-    "web-vitals": "^1.1.0"
+    "render-smooth-image-react": "^1.0.0",
+    "web-vitals": "^1.1.0",
+    "yup": "^0.32.8"
   },
   "scripts": {
     "start": "react-dotenv && npm run watch:css && react-scripts start",

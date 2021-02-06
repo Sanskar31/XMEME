@@ -3,6 +3,8 @@ import "react-responsive-modal/styles.css";
 import { Modal } from "react-responsive-modal";
 import axios from 'axios';
 import env from "react-dotenv";
+import RenderSmoothImage from 'render-smooth-image-react';
+import 'render-smooth-image-react/build/style.css';
 
 //Components
 import Meme from './Meme.js';
@@ -31,6 +33,7 @@ function App() {
   }
 
   const getMemes= async() => {
+    console.log("Fetching memes...")
     axios.get(backendURL)
       .then(res => res.data)
       .then(async(data) => {
@@ -51,17 +54,18 @@ function App() {
   }
 
   useEffect(() => {
-    console.log("HELLO");
     getMemes();
   }, [])
 
   return (
     <div className="min-h-screen bg-white">
       {/* Navbar */}
-      <nav className= "bg-white flex flex-row justify-between shadow-xl h-16" style={navStyle}>
+      <nav className= "relative z-10 bg-white flex flex-row justify-between shadow-xl h-16" style={navStyle}>
           <div className="ml-4 sm:ml-8 md:ml-16 md:ml-20 md:mr-20 flex justify-start">
-            <img className="mr-2 my-2" src="https://data.apksum.com/cb/com.jetfuel.colormeme/10.0/icon.png" alt="placeholder"/>
-            <h1 className="font-semibold text-3xl sm:text-5xl self-center nav-text">XMEME</h1>
+            <div className="my-2 mr-2 w-1/5 h-4/5">
+              <RenderSmoothImage src="https://data.apksum.com/cb/com.jetfuel.colormeme/10.0/icon.png" alt="placeholder"/>
+            </div>
+            <h1 className="w-4/5 font-semibold text-2xl sm:text-4xl self-center nav-text">XMEME</h1>
           </div>
           <h1 className="ml-4 sm:ml-8 md:mr-16 self-center mr-3 text-md sm:text-lg md:text-2xl nav-text">
             <button onClick={toggleModal} className="bg-white px-1 sm:px-2 sm:py-2 md:py-2 md:px-2 hover:bg-gray-100 text-gray-800 font-semibold border border-gray-400 rounded shadow-md">

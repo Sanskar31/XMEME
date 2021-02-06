@@ -1,6 +1,6 @@
 import React from 'react'
 
-export default function MemeForm({toggleErrorMessage}){
+const ErrorMessage= ({toggleErrorMessage, message}) => {
     return (
         <div className="transition ease-in ease-out flex justify-center items-center m-1 font-medium py-1 px-2 bg-white rounded-md text-red-700 bg-red-100 border border-red-300 text-sm">
             <div slot="avatar">
@@ -10,8 +10,8 @@ export default function MemeForm({toggleErrorMessage}){
                     <line x1="12" y1="16" x2="12.01" y2="16"></line>
                 </svg>
             </div>
-            <div className="font-normal  max-w-full flex-initial">
-                Internal Server Error! Please retry!
+            <div className="my-1 font-md font-semibold max-w-full flex-initial">
+                {message}
             </div>
             <div className="flex flex-auto flex-row-reverse">
                 <div>
@@ -24,3 +24,5 @@ export default function MemeForm({toggleErrorMessage}){
         </div>
     )
 }
+
+export default ErrorMessage;
