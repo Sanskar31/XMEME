@@ -35,7 +35,8 @@ router.get('/', async (req, res) => {
                 id: curr._id,
                 name: curr.name,
                 url: curr.url,
-                caption: curr.caption
+                caption: curr.caption,
+                date: Date(curr.date)
             }
         });
         res.status(200).json(memes);
@@ -57,7 +58,7 @@ router.get('/:id', getMeme, (req, res) => {
 });
 
 // Creating One
-router.post('/', async (req, res) => {
+router.post('/', async (req, res, next) => {
     // Creating a new document
     if(!req.body.name || !req.body.caption || !req.body.url){
         return res.status(406).json({message: "Not Acceptable"});

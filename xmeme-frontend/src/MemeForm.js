@@ -3,7 +3,7 @@ import env from "react-dotenv";
 import Loader from "react-loader-spinner";
 import ErrorMessage from './ErrorMessage';
 
-export default function MemeForm({showModal, toggleModal}) {
+export default function MemeForm({showModal, toggleModal, refreshMemes}) {
 
     //state
     const [Name, setName] = useState("");
@@ -38,6 +38,7 @@ export default function MemeForm({showModal, toggleModal}) {
             else if(res.status===500){
                 setLoading(false);
                 setShowErrorMessage(true);
+                refreshMemes();
             }
         })
         .catch(err => console.log(err));
