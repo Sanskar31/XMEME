@@ -1,15 +1,19 @@
 const express= require('express');
 const router= express.Router();
 const MemeDB= require('../models/memeDB');
+const ObjectID = require('mongodb').ObjectID;
 
 // Middleware to get a single document from db
 const getMeme= async (req, res, next) => {
+    if(!ObjectID.isValid(req.params.id)){
+        return res.status(404).json({message: "Meme not found"})
+    }
     let meme;
     try{
         meme= await MemeDB.findById(req.params.id);
         // If document not found return 404
         if(meme==null){
-            return res.status(404).json({message: "Cannot find the meme"});
+            return res.status(404).json({message: "Meme not found"});
         }
     } catch(err){
         // Server Error
@@ -25,8 +29,16 @@ router.get('/', async (req, res) => {
     try {
         // Get all documents from db & then only return first 100
         const all_memes= await MemeDB.find().sort( { date: -1 } );
-        const memes= all_memes.slice(0, 100);
-        res.json(memes);
+        const temp_memes= await all_memes.slice(0, 100);
+        const memes= await temp_memes.map(curr => {
+            return { 
+                id: curr._id,
+                name: curr.name,
+                url: curr.url,
+                caption: curr.caption
+            }
+        });
+        res.status(200).json(memes);
     } catch (err){
         // Server Error
         res.status(500).json({message: err.message})
@@ -35,15 +47,22 @@ router.get('/', async (req, res) => {
 
 // Getting One
 router.get('/:id', getMeme, (req, res) => {
-    res.json(res.meme);
+    let result= {
+        id: res.meme._id,
+        name: res.meme.name,
+        url: res.meme.url,
+        caption: res.meme.caption
+    }
+    res.status(200).json(result);
 });
 
 // Creating One
 router.post('/', async (req, res) => {
     // Creating a new document
-    if(req.body.name===null || req.body.caption===null || req.body.url===null){
-        return res.status(406).json({message: "Incorrect request body"});
+    if(!req.body.name || !req.body.caption || !req.body.url){
+        return res.status(406).json({message: "Not Acceptable"});
     }
+
     const meme= new MemeDB({
         name: req.body.name,
         caption: req.body.caption,
@@ -51,14 +70,24 @@ router.post('/', async (req, res) => {
     })
 
     try {
-        // Save the new document
-        const newMeme= await meme.save();
-        res.status(201).json(newMeme);
+        // Searching the db for dublicate document
+        MemeDB.findOne({
+            name: meme.name, 
+            caption: meme.caption, 
+            url: meme.url
+        }).then(async(result) => {
+            if(result!=null){
+                return res.status(409).json({message: "Conflict"});
+            }
+            // Saving the new document if no conflict found
+            const newMeme= await meme.save();
+            return res.status(201).json({id: newMeme._id});
+        })
+        .catch(err => console.log(err));
     } catch(err) {
         // Server Error
         res.status(500).json({message: err.message});
     }
-
 });
 
 //Updating One
@@ -70,13 +99,14 @@ router.patch('/:id', getMeme, async (req, res) => {
     if(req.body.caption != null){
         res.meme.caption= req.body.caption;
     }
-    if(req.body.imageURL != null){
-        res.meme.imageURL= req.body.imageURL;
+    if(req.body.url != null){
+        res.meme.url= req.body.url;
     }
     try {
         // Updating the document
         const updatedMeme= await res.meme.save();
-        res.status(200).json(updatedMeme);
+        res.status(200);
+        res.end();
     } catch(err) {
         // Server Error
         res.status(500).json({message: err.message});
