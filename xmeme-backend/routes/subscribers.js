@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const MemeDB = require('../models/memeDB');
 const ObjectID = require('mongodb').ObjectID;
+const swaggerUI = require('swagger-ui-express');
 
 // Middleware to get a single document from db
 const getMeme = async (req, res, next) => {

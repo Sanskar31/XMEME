@@ -13,7 +13,7 @@ export default function MemeForm({ showModal, toggleModal, refreshMemes }) {
 	const [showErrorMessage, setShowErrorMessage] = useState(false);
 	const [errorMessage, setErrorMessage] = useState('');
 
-	const backendURL = env.BACKEND_URL;
+	const backendURL = 'https://xmeme-backend-sanskar.herokuapp.com/memes/';
 
 	const postMeme = async (e) => {
 		e.preventDefault();

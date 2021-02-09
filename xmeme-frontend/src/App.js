@@ -5,6 +5,7 @@ import axios from 'axios';
 import env from 'react-dotenv';
 import RenderSmoothImage from 'render-smooth-image-react';
 import 'render-smooth-image-react/build/style.css';
+import EditMeme from './EditMeme';
 
 //Components
 import Meme from './Meme.js';
@@ -27,7 +28,7 @@ const navStyle = {
 	width: '100%',
 };
 
-const backendURL = env.BACKEND_URL;
+const backendURL = 'https://xmeme-backend-sanskar.herokuapp.com/memes/';
 
 function App() {
 	//state
@@ -35,10 +36,17 @@ function App() {
 	const [display, setDisplay] = useState([]);
 	const [loading, setLoading] = useState(true);
 	const [serverError, setServerError] = useState(false);
+	const [showEditMeme, setShowEditMeme] = useState(false);
+	const [editID, setEditID] = useState(0);
 
 	//function to open/close modal
 	const toggleModal = () => {
 		setShowModal((prev) => !prev);
+	};
+
+	const toggleShowEditMeme = (id) => {
+		setEditID(id);
+		setShowEditMeme((prev) => !prev);
 	};
 
 	const getMemes = async () => {
@@ -59,6 +67,7 @@ function App() {
 							url={meme.url}
 							caption={meme.caption}
 							timestamp={time}
+							toggleEditMeme={() => toggleShowEditMeme(meme.id)}
 						/>
 					);
 				});
@@ -111,6 +120,11 @@ function App() {
 					toggleModal={toggleModal}
 					refreshMemes={() => getMemes()}
 				/>
+			</Modal>
+
+			{/* Edit Meme Modal */}
+			<Modal open={showEditMeme} onClose={(id) => toggleShowEditMeme(id)}>
+				<EditMeme memeID={editID} />
 			</Modal>
 
 			{/* Content */}

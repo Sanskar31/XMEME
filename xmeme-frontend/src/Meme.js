@@ -3,6 +3,7 @@ import Truncate from 'react-truncate';
 import RenderSmoothImage from 'render-smooth-image-react';
 import 'render-smooth-image-react/build/style.css';
 import './assets/image-style.css';
+import TextTruncate from 'react-text-truncate';
 
 const altImage = 'https://cdn.sstatic.net/Sites/stackoverflow/img/404.svg';
 
@@ -49,8 +50,14 @@ export default function Meme({ name, url, caption, timestamp }) {
                     <p>{timestamp}</p>
                 </div>
             </div>
-            <div className='flex items-center justify-between leading-none p-2 md:px-4 text-base md:text-lg text-gray-600'>
-                <p>{name}</p>
+            <div className='w-full flex items-center justify-between  mt-4 p-2 md:px-4 text-base md:text-lg text-gray-600'>
+                <div classname="object-contain w-3/4 truncate ...  overflow-ellipsis overflow-clip ">
+                    {/* <TextTruncate line={5} element="span" truncateText="…" text={name} /> */}
+                    <Truncate width={120} lines={1} ellipsis={<span>...</span>}>
+                        {name}
+                    </Truncate>
+                    {/* <p className="object-contain max-w-1/3">{name}</p> */}
+                </div>
                 <button className='bg-white hover:bg-gray-100 text-gray-600 font-semibold py-2 px-4 border border-gray-400 rounded shadow-md'>
                     Edit
                 </button>

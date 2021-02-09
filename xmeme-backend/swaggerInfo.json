@@ -1,0 +1,236 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "Submission for Crio Winter of Doing Stage 2B.",
+    "version": "1.0.0",
+    "title": "XMEME API",
+    "contact": {
+      "name": "Sanskar Agarwal",
+      "url": "https://www.linkedin.com/in/sanskaragarwal05/"
+    }
+  },
+  "host": "xmeme-backend-sanskar.herokuapp.com",
+  "basePath": "/",
+  "tags": [
+    {
+      "name": "memes",
+      "description": "Everything about Memes"
+    }
+  ],
+  "schemes": [
+    "https"
+  ],
+  "paths": {
+    "/memes/": {
+      "get": {
+        "tags": [
+          "memes"
+        ],
+        "summary": "Get Latest 100 Memes",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Operation",
+            "schema": {
+              "items": {
+                "$ref": "#/definitions/Meme"
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "memes"
+        ],
+        "summary": "Create A New Meme",
+        "description": "",
+        "operationId": "postMeme",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Meme request",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/PostSchema"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Meme Created Successfully",
+            "schema": {
+              "$ref": "#/definitions/Meme"
+            }
+          },
+          "400": {
+            "description": "Invalid Request Body"
+          },
+          "406": {
+            "description": "Not Acceptable"
+          },
+          "409": {
+            "description": "Conflict"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/memes/{memeId}": {
+      "get": {
+        "tags": [
+          "memes"
+        ],
+        "summary": "Find meme by ID",
+        "operationId": "getMemeById",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "memeId",
+            "in": "path",
+            "description": "ID of meme that needs to be fetched",
+            "required": true,
+            "type": "string",
+            "format": "hex"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Retrieved Meme from memeId Successfully",
+            "schema": {
+              "$ref": "#/definitions/Meme"
+            }
+          },
+          "404": {
+            "description": "Meme Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "memes"
+        ],
+        "summary": "Update an existing meme",
+        "operationId": "updateMeme",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "memeId",
+            "in": "path",
+            "description": "ID of meme that needs to be updated",
+            "required": true,
+            "type": "string",
+            "format": "hex"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Object containing updated url or caption or both",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/PutSchema"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfull Operation"
+          },
+          "400": {
+            "description": "Invalid Request Body"
+          },
+          "403": {
+            "description": "Name Cannot Be Updated"
+          },
+          "404": {
+            "description": "Meme not found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "Meme": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string",
+          "description": "Owner Name"
+        },
+        "url": {
+          "type": "string",
+          "description": "Image URL"
+        },
+        "caption": {
+          "type": "string",
+          "description": "Meme Caption"
+        },
+        "date": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "ID": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      }
+    },
+    "PutSchema": {
+      "type": "object",
+      "properties": {
+        "caption": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        }
+      }
+    },
+    "PostSchema": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "caption": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "externalDocs": {
+    "description": "Find out more about Swagger",
+    "url": "http://swagger.io"
+  }
+}
