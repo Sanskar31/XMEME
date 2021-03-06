@@ -1,1 +1,1 @@
-XMEME - Meme gallery
+XMEME - Meme Gallery Backend

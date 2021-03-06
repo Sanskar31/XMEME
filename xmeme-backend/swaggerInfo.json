@@ -126,7 +126,7 @@
         "tags": [
           "memes"
         ],
-        "summary": "Update an existing meme",
+        "summary": "Update an existing meme by ID",
         "operationId": "updateMeme",
         "consumes": [
           "application/json"

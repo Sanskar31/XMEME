@@ -5,11 +5,11 @@ import axios from 'axios';
 import env from 'react-dotenv';
 import RenderSmoothImage from 'render-smooth-image-react';
 import 'render-smooth-image-react/build/style.css';
-import EditMeme from './EditMeme';
+import EditMeme from './containers/EditMeme';
 
 //Components
-import Meme from './Meme.js';
-import MemeForm from './MemeForm.js';
+import Meme from './components/Meme';
+import MemeForm from './containers/MemeForm';
 
 import TimeAgo from 'javascript-time-ago';
 
@@ -28,7 +28,7 @@ const navStyle = {
 	width: '100%',
 };
 
-const backendURL = 'https://xmeme-backend-sanskar.herokuapp.com/memes/';
+const backendURL = env.BACKEND_URL;
 
 function App() {
 	//state
@@ -123,8 +123,21 @@ function App() {
 			</Modal>
 
 			{/* Edit Meme Modal */}
-			<Modal open={showEditMeme} onClose={(id) => toggleShowEditMeme(id)}>
-				<EditMeme memeID={editID} />
+			<Modal
+				open={showEditMeme}
+				onClose={() => {
+					setEditID(-1);
+					setShowEditMeme(false);
+				}}
+			>
+				<EditMeme
+					memeID={editID}
+					toggleShowEditMeme={() => {
+						setEditID(-1);
+						setShowEditMeme(false);
+					}}
+					refreshMemes={() => getMemes()}
+				/>
 			</Modal>
 
 			{/* Content */}
