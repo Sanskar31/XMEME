@@ -7,7 +7,7 @@
 
 #production files
 .firebaserc
-.firebase
+/.firebase
 .env
 firebase.json
 
