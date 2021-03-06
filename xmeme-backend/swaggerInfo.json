@@ -5,11 +5,11 @@
     "version": "1.0.0",
     "title": "XMEME API",
     "contact": {
-      "name": "Sanskar Agarwal",
-      "url": "https://www.linkedin.com/in/sanskaragarwal05/"
+      "name": "Name",
+      "url": "Your URL"
     }
   },
-  "host": "xmeme-backend-sanskar.herokuapp.com",
+  "host": "Your Backend URL",
   "basePath": "/",
   "tags": [
     {
